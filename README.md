@@ -1,115 +1,144 @@
-# Splunk SSH Brute Force Detection Lab
+Splunk SSH Brute Force Detection Lab
 
-## Overview
+Overview
 
-This project demonstrates how a Security Operations Center (SOC) can detect SSH brute force attacks using Splunk SIEM.
+This project demonstrates how a Security Operations Center (SOC) can
+detect SSH brute force attacks using Splunk SIEM.
 
-The lab simulates a real-world attack scenario where an attacker performs multiple SSH login attempts against a Linux server. Authentication logs are forwarded to Splunk for analysis and detection.
+The lab simulates a real-world attack scenario where an attacker
+performs multiple SSH login attempts against a Linux server.
+Authentication logs are forwarded to Splunk for analysis and detection.
 
----
+------------------------------------------------------------------------
 
-## Lab Architecture
+Lab Architecture
 
-- **Attacker:** Kali Linux
-- **Victim:** Ubuntu Server
-- **SIEM:** Splunk Enterprise
+Attacker: Kali Linux
+Victim: Ubuntu Server
+SIEM: Splunk Enterprise
 
-**Attack flow:**  
-Kali Linux (Hydra) → Ubuntu Server (`/var/log/auth.log`) → Splunk SIEM
+Attack Flow:
 
----
+Kali Linux (Hydra) → Ubuntu Server (/var/log/auth.log) → Splunk SIEM
 
-## Tools Used
+------------------------------------------------------------------------
 
-- Splunk Enterprise
-- Splunk Universal Forwarder
-- Hydra
-- Kali Linux
-- Ubuntu Server
-- VirtualBox
+Tools Used
 
----
+-   Splunk Enterprise
+-   Splunk Universal Forwarder
+-   Hydra
+-   Kali Linux
+-   Ubuntu Server
+-   VirtualBox
 
-## 1. Splunk Universal Forwarder Installation
+------------------------------------------------------------------------
 
-The Splunk Universal Forwarder was installed and initialized on the Ubuntu server to forward authentication logs to the Splunk SIEM.
+1. Splunk Universal Forwarder Installation
 
-![Splunk Forwarder Initial Setup](pics/splunk_forwarder_initial_setup.png)
+The Splunk Universal Forwarder was installed and initialized on the
+Ubuntu server to forward authentication logs to the Splunk SIEM.
 
----
+[Splunk Forwarder Initial Setup]
 
-## 2. Splunk Forwarder Port Configuration
+------------------------------------------------------------------------
 
-During the first startup, the default Splunk management port was already in use. A new port was configured so the forwarder could start correctly.
+2. Splunk Forwarder Port Configuration
 
-![Splunk Forwarder Port Configuration](pics/splunk_forwarder_port_configuration.png)
+During the first startup, the default Splunk management port was already
+in use. A new port was configured so the forwarder could start
+correctly.
 
----
+[Splunk Forwarder Port Configuration]
 
-## 3. Adding the Splunk Forward Server
+------------------------------------------------------------------------
 
-The Ubuntu server was configured to forward logs to the Splunk SIEM server.
+3. Adding the Splunk Forward Server
 
-![Splunk Forwarder Add Server](pics/splunk_forwarder_add_server.png)
+The Ubuntu server was configured to forward logs to the Splunk SIEM
+server.
 
----
+[Splunk Forwarder Add Server]
 
-## 4. Adding Authentication Log Monitoring
+------------------------------------------------------------------------
 
-The Splunk Universal Forwarder was configured to monitor the Ubuntu authentication log file.
+4. Adding Authentication Log Monitoring
 
-![Splunk Forwarder Add Monitor](pics/splunk_forwarder_add_monitor.png)
+The Splunk Universal Forwarder was configured to monitor the Ubuntu
+authentication log file.
 
----
+[Splunk Forwarder Add Monitor]
 
-## 5. Full Forwarder Configuration
+------------------------------------------------------------------------
 
-After adding the forward server and monitoring the authentication log, the forwarder was restarted successfully.
+5. Full Forwarder Configuration
 
-![Splunk Forwarder Configuration](pics/splunk_forwarder_configuration.png)
+After adding the forward server and monitoring the authentication log,
+the forwarder was restarted successfully.
 
----
+[Splunk Forwarder Configuration]
 
-## 6. SSH Brute Force Attack Simulation
+------------------------------------------------------------------------
+
+6. SSH Brute Force Attack Simulation
 
 The attack was simulated from a Kali Linux machine using Hydra.
 
-**Command used:**
+Command used:
 
-```bash
 hydra -l ubuntu -P /usr/share/wordlists/rockyou.txt ssh://192.168.56.105
+
+[Hydra SSH Brute Force Attack]
+
+------------------------------------------------------------------------
 
 7. Live Monitoring of Ubuntu Authentication Logs
 
-During the brute force attack, the Ubuntu server recorded failed SSH login attempts in real time.
+During the brute force attack, the Ubuntu server recorded failed SSH
+login attempts in real time.
+
+[Ubuntu Auth Logs Live Monitoring]
+
+------------------------------------------------------------------------
 
 8. Ubuntu Authentication Log Evidence
 
-The /var/log/auth.log file clearly shows repeated failed login attempts from the attacker machine.
+The /var/log/auth.log file clearly shows repeated failed login attempts
+from the attacker machine.
+
+[Ubuntu Auth Logs Brute Force]
+
+------------------------------------------------------------------------
 
 9. Detection in Splunk
 
-The forwarded logs were successfully indexed in Splunk. Failed SSH login attempts were detected using the following SPL query:
+The forwarded logs were successfully indexed in Splunk.
 
-index=main "Failed password"
+Example SPL query used for detection:
+
+index=main “Failed password”
+
+[Splunk Brute Force Detection]
+
+------------------------------------------------------------------------
 
 MITRE ATT&CK Mapping
 
-Technique: T1110 - Brute Force
+Technique: T1110 – Brute Force
+https://attack.mitre.org/techniques/T1110/
+
+------------------------------------------------------------------------
 
 Skills Demonstrated
 
-SIEM monitoring
+-   SIEM monitoring
+-   Log analysis
+-   SSH brute force detection
+-   Linux security monitoring
+-   Threat detection
+-   SOC lab design
 
-Log analysis
-
-SSH brute force detection
-
-Linux security monitoring
-
-Threat detection
-
-SOC lab design
+------------------------------------------------------------------------
 
 Author
 
