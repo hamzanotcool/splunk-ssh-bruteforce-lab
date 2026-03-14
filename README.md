@@ -6,8 +6,8 @@ This project demonstrates how to detect SSH brute force attacks using Splunk SIE
 ## Lab Setup
 
 Attacker: Kali Linux  
-Victim: Ubuntu Server  
-SIEM: Splunk Enterprise  
+Victim: Ubuntu Server (@hamza) 
+SIEM: Splunk Enterprise (@siem-hamza)
 
 ## Attack Simulation
 
