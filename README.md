@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project demonstrates how a Security Operations Center (SOC) can detect SSH brute force attacks using a SIEM platform.
+This project demonstrates how a Security Operations Center (SOC) can detect SSH brute force attacks using Splunk SIEM.
 
 The lab simulates a real-world attack scenario where an attacker performs multiple SSH login attempts against a Linux server. Authentication logs are forwarded to Splunk for analysis and detection.
 
@@ -10,95 +10,107 @@ The lab simulates a real-world attack scenario where an attacker performs multip
 
 ## Lab Architecture
 
-Attacker: Kali Linux
-Victim: Ubuntu Server
-SIEM: Splunk Enterprise
+- **Attacker:** Kali Linux
+- **Victim:** Ubuntu Server
+- **SIEM:** Splunk Enterprise
 
-Attack flow:
-
-Attacker (Hydra) → Ubuntu Server (SSH logs) → Splunk SIEM (Detection)
+**Attack flow:**  
+Kali Linux (Hydra) → Ubuntu Server (`/var/log/auth.log`) → Splunk SIEM
 
 ---
 
 ## Tools Used
 
-* Splunk Enterprise
-* Splunk Universal Forwarder
-* Hydra
-* Kali Linux
-* Ubuntu Server
-* VirtualBox
+- Splunk Enterprise
+- Splunk Universal Forwarder
+- Hydra
+- Kali Linux
+- Ubuntu Server
+- VirtualBox
 
 ---
 
-## Attack Simulation
+## 1. Splunk Universal Forwarder Installation
 
-A brute force SSH attack is generated using Hydra from the attacker machine:
+The Splunk Universal Forwarder was installed and initialized on the Ubuntu server to forward authentication logs to the Splunk SIEM.
 
-```
+![Splunk Forwarder Initial Setup](pics/splunk_forwarder_initial_setup.png)
+
+---
+
+## 2. Splunk Forwarder Port Configuration
+
+During the first startup, the default Splunk management port was already in use. A new port was configured so the forwarder could start correctly.
+
+![Splunk Forwarder Port Configuration](pics/splunk_forwarder_port_configuration.png)
+
+---
+
+## 3. Adding the Splunk Forward Server
+
+The Ubuntu server was configured to forward logs to the Splunk SIEM server.
+
+![Splunk Forwarder Add Server](pics/splunk_forwarder_add_server.png)
+
+---
+
+## 4. Adding Authentication Log Monitoring
+
+The Splunk Universal Forwarder was configured to monitor the Ubuntu authentication log file.
+
+![Splunk Forwarder Add Monitor](pics/splunk_forwarder_add_monitor.png)
+
+---
+
+## 5. Full Forwarder Configuration
+
+After adding the forward server and monitoring the authentication log, the forwarder was restarted successfully.
+
+![Splunk Forwarder Configuration](pics/splunk_forwarder_configuration.png)
+
+---
+
+## 6. SSH Brute Force Attack Simulation
+
+The attack was simulated from a Kali Linux machine using Hydra.
+
+**Command used:**
+
+```bash
 hydra -l ubuntu -P /usr/share/wordlists/rockyou.txt ssh://192.168.56.105
-```
 
-This generates multiple failed authentication attempts in the Ubuntu authentication logs.
+7. Live Monitoring of Ubuntu Authentication Logs
 
----
+During the brute force attack, the Ubuntu server recorded failed SSH login attempts in real time.
 
-## Log Collection
+8. Ubuntu Authentication Log Evidence
 
-The Ubuntu server sends authentication logs to Splunk using the Splunk Universal Forwarder.
+The /var/log/auth.log file clearly shows repeated failed login attempts from the attacker machine.
 
-Monitored log file:
+9. Detection in Splunk
 
-```
-/var/log/auth.log
-```
+The forwarded logs were successfully indexed in Splunk. Failed SSH login attempts were detected using the following SPL query:
 
----
-
-## Detection in Splunk
-
-Example SPL query used to detect brute force attempts:
-
-```
 index=main "Failed password"
-```
 
-This query displays all failed SSH login attempts detected in the logs.
+MITRE ATT&CK Mapping
 
----
+Technique: T1110 - Brute Force
 
-## Example Detection
+Skills Demonstrated
 
-Splunk successfully identifies multiple failed authentication attempts from the attacker IP address.
+SIEM monitoring
 
-Indicators of compromise:
+Log analysis
 
-* Multiple failed SSH login attempts
-* Same source IP address
-* Repeated authentication failures in a short period
+SSH brute force detection
 
----
+Linux security monitoring
 
-## MITRE ATT&CK Mapping
+Threat detection
 
-Technique: **T1110 – Brute Force**
+SOC lab design
 
-[https://attack.mitre.org/techniques/T1110/](https://attack.mitre.org/techniques/T1110/)
+Author
 
----
-
-## Skills Demonstrated
-
-* SIEM monitoring
-* Log analysis
-* SSH brute force detection
-* Linux security monitoring
-* SOC lab design
-* Threat detection
-
----
-
-## Author
-
-GitHub:
-[https://github.com/hamzanotcool](https://github.com/hamzanotcool)
+GitHub: https://github.com/hamzanotcool
